@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<title>AI2Diego · Tu segundo cerebro, en grande y sin complicaciones</title>
+<meta name="description" content="Versión Nikita de AI2Diego: una pregunta por pantalla, respuestas gigantes y tu segundo cerebro trabajando con Ai2Me. Las cuentas, planes y pagos viven en ai2me.com.">
+<style>
+:root{
+  --violet:#7c3aed; --magenta:#db2777; --pink:#f472b6;
+  --ink:#221038; --paper:#ffffff;
+  --yellow:#ffd60a; --yellow-ink:#221038;
+  --mint:#2ee6a8;
+  --font:ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100dvh;display:flex;flex-direction:column;color:var(--paper);
+  font-family:var(--font);
+  background:linear-gradient(155deg,#6d28ff 0%,#a21caf 48%,#db2777 100%);
+  background-attachment:fixed;overflow-x:hidden;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    radial-gradient(340px 340px at 88% -40px, rgba(255,214,10,.5), transparent 70%),
+    radial-gradient(420px 420px at -120px 62%, rgba(46,230,168,.35), transparent 70%);
+}
+button{font-family:var(--font);cursor:pointer}
+:focus-visible{outline:4px solid var(--ink);outline-offset:2px;border-radius:12px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+header{display:flex;align-items:center;gap:10px;padding:16px 18px 6px;position:relative;z-index:5;max-width:600px;width:100%;margin:0 auto}
+.logo{width:42px;height:42px;border-radius:14px;background:var(--yellow);display:grid;place-items:center;flex:0 0 auto;box-shadow:0 4px 0 rgba(34,16,56,.35)}
+.logo svg{width:24px;height:24px}
+header .t b{font-size:20px;font-weight:900;letter-spacing:-.01em}
+header .t span{display:block;font-size:12.5px;font-weight:700;opacity:.85}
+header .sp{flex:1}
+.iconbtn{background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.55);color:#fff;border-radius:999px;width:46px;height:46px;display:grid;place-items:center}
+.iconbtn svg{width:22px;height:22px}
+main{flex:1;width:100%;max-width:600px;margin:0 auto;padding:14px 18px 30px;position:relative;z-index:1}
+.view{display:none}
+.view.on{display:block;animation:pop .28s ease}
+@keyframes pop{from{transform:translateY(10px) scale(.99);opacity:.4}to{transform:none;opacity:1}}
+h1{font-size:clamp(42px,11.5vw,64px);line-height:.98;margin:10px 0 14px;font-weight:900;letter-spacing:-.02em}
+h1 .hl{color:var(--yellow)}
+h2{font-size:clamp(30px,8vw,42px);line-height:1.05;margin:0 0 10px;font-weight:900;letter-spacing:-.015em}
+p{line-height:1.45;margin:0 0 16px;font-size:17px;font-weight:600;opacity:.95}
+.small{font-size:13.5px;font-weight:600;opacity:.85}
+.share-card{background:var(--paper);color:var(--ink);border-radius:28px;padding:22px;margin:20px 0;box-shadow:0 10px 0 rgba(34,16,56,.35);transform:rotate(-1deg)}
+.share-card .tag{display:inline-block;background:var(--ink);color:var(--yellow);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:900;border-radius:999px;padding:6px 12px}
+.share-card h3{margin:14px 0 8px;font-size:24px;line-height:1.15;font-weight:900}
+.share-card p{margin:0;font-size:16px;color:#4c4361;opacity:1}
+.btn{display:block;width:100%;border:none;border-radius:999px;padding:20px 18px;font-size:20px;font-weight:900;background:var(--yellow);color:var(--yellow-ink);box-shadow:0 7px 0 rgba(34,16,56,.4);transition:transform .15s ease}
+.btn:active{transform:translateY(4px) scale(.99);box-shadow:0 3px 0 rgba(34,16,56,.4)}
+.btn.green{background:var(--mint);color:var(--ink)}
+.btn.white{background:var(--paper);color:var(--ink)}
+.btn.ghost{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.6);color:#fff;box-shadow:none;font-size:17px;padding:16px}
+.btn + .btn{margin-top:14px}
+.segs{display:flex;gap:7px;margin:8px 0 10px}
+.segs i{flex:1;height:14px;border-radius:999px;background:rgba(255,255,255,.3)}
+.segs i.done{background:var(--yellow)}
+.segs i.now{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+.step-count{font-size:14px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.segs i.pop{animation:segpop .45s ease}
+@keyframes segpop{0%{transform:scale(.55)}55%{transform:scale(1.4)}100%{transform:scale(1)}}
+.lvl{display:inline-block;margin-top:12px;background:var(--yellow);color:var(--yellow-ink);border-radius:999px;padding:8px 14px;font-size:14.5px;font-weight:900;box-shadow:0 4px 0 rgba(34,16,56,.35)}
+.lvl-pill{display:inline-block;background:var(--ink);color:var(--yellow);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:900}
+.react small{display:block;margin-top:16px;font-size:clamp(17px,4.5vw,22px);font-weight:800;color:#fff;opacity:.95;line-height:1.3}
+.ach{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.ach .medal{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;box-shadow:0 4px 0 rgba(34,16,56,.3)}
+.ach .medal svg{width:32px;height:32px}
+.ach .ach-tag{display:inline-block;background:var(--ink);color:var(--yellow);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:900;border-radius:999px;padding:5px 11px}
+.ach .ach-level{margin:7px 0 0;font-size:19px;font-weight:900;line-height:1.2;color:var(--ink);opacity:1}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:0 0 18px}
+.stat{background:#f3efff;border-radius:18px;padding:12px 10px;text-align:center}
+.stat b{display:block;font-size:16px;font-weight:900;line-height:1.2}
+.stat span{display:block;margin-top:4px;font-size:11.5px;font-weight:800;color:#7a7090;text-transform:uppercase;letter-spacing:.05em}
+.step-type{display:inline-block;margin-top:12px;background:rgba(34,16,56,.35);border-radius:999px;padding:6px 12px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:900}
+.step-q{font-size:clamp(34px,9.5vw,50px);margin-top:14px}
+.opts{display:grid;gap:14px;margin-top:22px}
+.opt{background:var(--paper);border:none;color:var(--ink);border-radius:24px;padding:20px;text-align:left;font-size:19px;font-weight:800;line-height:1.25;box-shadow:0 6px 0 rgba(34,16,56,.35);transition:transform .15s ease;width:100%}
+.opt:active{transform:translateY(3px) scale(.99);box-shadow:0 3px 0 rgba(34,16,56,.35)}
+.opt.sel{background:var(--yellow)}
+.opt small{display:block;color:#5b5170;font-weight:700;margin-top:5px;font-size:15px}
+textarea,input[type=text],input[type=password]{width:100%;background:var(--paper);border:none;color:var(--ink);border-radius:20px;padding:18px;font-size:18px;font-family:var(--font);font-weight:700;box-shadow:0 6px 0 rgba(34,16,56,.3)}
+textarea::placeholder,input::placeholder{color:#8a80a0}
+label{display:block;font-size:14px;font-weight:800;margin:18px 0 7px;opacity:.95}
+.decision{background:var(--paper);color:var(--ink);border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 10px 0 rgba(34,16,56,.35)}
+.decision .big{font-size:27px;font-weight:900;line-height:1.15;margin:0 0 4px}
+.decision .sub{font-size:15px;color:#5b5170;font-weight:700;margin:0 0 16px}
+.decision dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 14px;font-size:15px}
+.decision dt{color:#7a7090;font-weight:700}
+.decision dd{margin:0;font-weight:900}
+.chat{display:flex;flex-direction:column;gap:10px;padding:8px 0 16px;min-height:220px}
+.msg{max-width:88%;padding:14px 17px;border-radius:22px;font-size:16.5px;line-height:1.45;font-weight:600;white-space:pre-wrap;word-break:break-word}
+.msg.bot{background:var(--paper);color:var(--ink);align-self:flex-start;border-bottom-left-radius:8px;box-shadow:0 4px 0 rgba(34,16,56,.25)}
+.msg.me{background:var(--ink);color:#fff;align-self:flex-end;border-bottom-right-radius:8px}
+.msg.sys{background:transparent;color:#fff;opacity:.9;align-self:center;font-size:13.5px;text-align:center;box-shadow:none}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin:4px 0 14px}
+.chip{background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.55);color:#fff;border-radius:999px;padding:11px 15px;font-size:14.5px;font-weight:800}
+.composer{display:flex;gap:10px;position:sticky;bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom))}
+.composer textarea{flex:1;resize:none;max-height:110px;border-radius:999px;padding:16px 20px}
+.send{flex:0 0 auto;width:58px;height:58px;border-radius:50%;background:var(--yellow);border:none;display:grid;place-items:center;box-shadow:0 5px 0 rgba(34,16,56,.4)}
+.send:active{transform:translateY(3px)}
+.send svg{width:26px;height:26px}
+footer{padding:18px;font-size:13px;line-height:1.55;font-weight:600;opacity:.92;max-width:600px;margin:0 auto;width:100%}
+footer a{color:#fff}
+.sheet{background:rgba(34,16,56,.3);border-radius:22px;padding:18px;margin-top:18px}
+.hidden{display:none !important}
+.react{position:fixed;inset:0;z-index:60;display:none;place-items:center;text-align:center;padding:30px;background:linear-gradient(155deg,#6d28ff,#db2777)}
+.react.on{display:grid;animation:pop .22s ease}
+.react b{font-size:clamp(38px,10vw,58px);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:#fff}
+.react b span{color:var(--yellow)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4z" fill="#221038" opacity=".92"/></svg></div>
+  <div class="t"><b>AI2Diego</b><span>Tu segundo cerebro, sin complicaciones</span></div>
+  <div class="sp"></div>
+  <button class="iconbtn" id="btn-config" type="button" aria-label="Abrir ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.48 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32l-.4 2.51a7 7 0 0 0-2.42 1.4l-2.48-1-2 3.46L5.14 10.6A7 7 0 0 0 5 12c0 .48.05.94.14 1.4L3.04 15.03l2 3.46 2.48-1a7 7 0 0 0 2.42 1.4l.4 2.51h3.32l.4-2.51a7 7 0 0 0 2.42-1.4l2.48 1 2-3.46-2.1-1.63c.09-.46.14-.92.14-1.4z"/></svg></button>
+</header>
+
+<main>
+  <!-- 0 · VALOR PRIMERO: una promesa gigante, un botón gigante -->
+  <section class="view on" id="v-start">
+    <h1>Tu segundo cerebro. <span class="hl">En serio, así de fácil.</span></h1>
+    <p>Sin aprender diez herramientas. Tú tocas, respondes y la dupla Diego + Vesper trabaja con Ai2Me por ti.</p>
+    <div class="share-card">
+      <span class="tag">Ejemplo real de entrega</span>
+      <h3>Plan de captación de 7 días para un negocio local</h3>
+      <p>Guion de contenido, mensajes de seguimiento y página lista para recibir clientes. Generado tras 6 preguntas de onboarding, sin tocar un panel complicado.</p>
+    </div>
+    <button class="btn" id="btn-start" type="button">Empezar mi onboarding</button>
+    <button class="btn ghost" id="btn-have" type="button">Ya tengo cuenta en Ai2Me</button>
+    <p class="small" style="margin-top:14px">Tu cuenta, tus planes y tus pagos siempre viven en <b>ai2me.com</b>. Esta es solo la puerta de entrada fácil.</p>
+  </section>
+
+  <!-- 1 · ONBOARDING TIPO LAYA: una decisión tipada por pantalla completa -->
+  <section class="view" id="v-onb">
+    <div class="segs" id="segs" aria-hidden="true"></div>
+    <div class="step-count" id="step-count"></div>
+    <div><span class="lvl" id="lvl-line">Nivel 1 · Tu cerebro está despertando</span></div>
+    <span class="step-type" id="step-type">choice</span>
+    <h2 class="step-q" id="step-q"></h2>
+    <p id="step-hint"></p>
+    <div class="opts" id="step-opts"></div>
+    <div id="step-text" class="hidden">
+      <textarea id="step-input" rows="3" aria-label="Tu respuesta en una frase"></textarea>
+      <button class="btn" id="step-next" type="button" style="margin-top:14px">Continuar</button>
+    </div>
+    <button class="btn ghost hidden" id="step-skip" type="button" style="margin-top:14px">Ahora no</button>
+  </section>
+
+  <!-- 2 · DECISIÓN / PERFIL: tarjeta para compartir -->
+  <section class="view" id="v-profile">
+    <h2>Ya está. <span style="color:var(--yellow)">Esto es lo tuyo.</span></h2>
+    <p>Decisiones tipadas, en una sola pasada, como hace un motor tipo Laya. Este perfil es el contexto que recibe tu segundo cerebro.</p>
+    <div class="decision">
+      <div class="ach">
+        <div class="medal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#221038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.8 10.2L6 3.5h4.2L12 7l1.8-3.5H18l-2.8 6.7"/><circle cx="12" cy="15" r="5.2"/><path d="M12 12.4l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 14.5l2-.3z" fill="#221038" stroke="none"/></svg></div>
+        <div>
+          <span class="ach-tag">Logro desbloqueado</span>
+          <p class="ach-level" id="ach-level">Nivel 7 · Tu cerebro conoce tu meta a 90 días</p>
+        </div>
+      </div>
+      <p class="big">Mi segundo cerebro ya sabe qué hacer</p>
+      <p class="sub">Perfil creado con 7 toques. Listo para trabajar.</p>
+      <div class="stats">
+        <div class="stat"><b id="stat-nivel">7</b><span>Nivel alcanzado</span></div>
+        <div class="stat"><b id="stat-etapa"></b><span>Etapa</span></div>
+        <div class="stat"><b id="stat-entrega"></b><span>Primera entrega</span></div>
+      </div>
+      <dl id="decision-dl"></dl>
+    </div>
+    <button class="btn green" id="btn-ai2me" type="button">Activar mi plan en Ai2Me</button>
+    <button class="btn" id="btn-chat" type="button">Hablar con mi segundo cerebro</button>
+    <button class="btn ghost" id="btn-redo" type="button">Repetir el onboarding</button>
+  </section>
+
+  <!-- 3 · CHAT (Kimi K3 vía OpenRouter de Ai2Me) -->
+  <section class="view" id="v-chat">
+    <h2>Tu segundo cerebro</h2>
+    <div style="margin-bottom:10px"><span class="lvl-pill hidden" id="chat-level"></span></div>
+    <p class="small" id="chat-status">Chat con Kimi K3 vía OpenRouter. Pega tu llave en Ajustes para hablar en vivo.</p>
+    <div class="chat" id="chat-box"></div>
+    <div class="chips" id="chips"></div>
+    <div class="composer">
+      <textarea id="composer" rows="1" placeholder="Escríbele a tu segundo cerebro" aria-label="Escribe un mensaje"></textarea>
+      <button class="send" id="btn-send" type="button" aria-label="Enviar mensaje"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4l-4.5 16-3-6.5L4 12z" fill="#221038"/><path d="M12.5 13.5L20 4" stroke="#221038" stroke-width="1.6"/></svg></button>
+    </div>
+    <button class="btn green" id="btn-telegram" type="button">Pasar este chat a Telegram</button>
+    <button class="btn ghost" id="btn-back-profile" type="button" style="margin-top:12px">Ver mi perfil</button>
+  </section>
+
+  <!-- AJUSTES -->
+  <section class="view" id="v-config">
+    <h2>Ajustes</h2>
+    <p>La llave se guarda solo en este teléfono, en tu navegador. Nunca se envía a otro servidor que no sea OpenRouter.</p>
+    <label for="cfg-key">Llave de OpenRouter (la de tu cuenta)</label>
+    <input type="password" id="cfg-key" placeholder="sk-or-..." autocomplete="off">
+    <label for="cfg-model">Modelo principal</label>
+    <input type="text" id="cfg-model" value="moonshotai/kimi-k3">
+    <label for="cfg-bot">Usuario del bot de Telegram (sin @)</label>
+    <input type="text" id="cfg-bot" placeholder="ai2diego_bot">
+    <div class="sheet">
+      <b>Links oficiales de Ai2Me</b>
+      <p class="small" style="margin:8px 0 0">Planes y créditos: ai2me.com/pricing · Entrar a la app: ai2me.com/landing. Son los links de Ai2Me y no cambian.</p>
+    </div>
+    <button class="btn" id="btn-save" type="button" style="margin-top:18px">Guardar</button>
+    <button class="btn ghost" id="btn-config-back" type="button">Volver</button>
+  </section>
+</main>
+
+<footer>
+  Capa de experiencia construida por <b>Diego Vetencourt · Soluciones Artificiales</b> sobre Ai2Me.
+  Las cuentas, los planes, los créditos y los pagos viven en <a href="https://www.ai2me.com/landing" rel="noopener">ai2me.com</a>.
+  Onboarding con decisiones tipadas (patrón de Laya) y conversación con Kimi K3 vía OpenRouter.
+</footer>
+
+<div class="react" id="react" aria-hidden="true"><div><b id="react-txt"></b><small id="react-sub"></small></div></div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const AI2ME_PRICING = "https://www.ai2me.com/pricing";
+const AI2ME_APP = "https://www.ai2me.com/landing";
+const store = {
+  get k(){ return localStorage.getItem("a2d_key") || ""; },
+  set k(v){ localStorage.setItem("a2d_key", v); },
+  get model(){ return localStorage.getItem("a2d_model") || "moonshotai/kimi-k3"; },
+  set model(v){ localStorage.setItem("a2d_model", v); },
+  get bot(){ return localStorage.getItem("a2d_bot") || ""; },
+  set bot(v){ localStorage.setItem("a2d_bot", v); }
+};
+function show(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo({top:0});
+}
+/* ---------- Onboarding: decisiones tipadas (patrón Laya) ----------
+   Tipos: choice (una opción), score (escala), noul (sí/no), text (texto + clasificación local) */
+const STEPS = [
+  { id:"intencion", type:"choice", q:"¿Qué quieres lograr primero?",
+    hint:"Elige una sola cosa. Del resto nos encargamos después.",
+    react:"¡Eso es! <span>Empezamos por ahí.</span>",
+    options:[
+      {v:"crear", t:"Crear mi negocio", s:"Página y oferta listas para vender", agente:"ai-builder", etapa:"Build"},
+      {v:"clientes", t:"Conseguir clientes", s:"Captación y seguimiento", agente:"ai-client-acquisition", etapa:"Launch"},
+      {v:"contenido", t:"Crear contenido", s:"Imagen, video y textos para redes", agente:"ai-image", etapa:"Launch"},
+      {v:"organizar", t:"Organizar mi negocio", s:"Documentos y procesos en orden", agente:"ai-docs", etapa:"Operate"},
+      {v:"presentar", t:"Presentar y vender mejor", s:"Presentaciones y números claros", agente:"ai-slides", etapa:"Operate"}
+    ]},
+  { id:"oficio", type:"choice", q:"¿A qué te dedicas?",
+    hint:"Esto ajusta el lenguaje y los ejemplos a tu mundo.",
+    react:"Perfecto. <span>Ya sé cómo hablarte.</span>",
+    options:[
+      {v:"servicios", t:"Vendo servicios"}, {v:"productos", t:"Vendo productos"},
+      {v:"contenido", t:"Soy creador de contenido"}, {v:"empezando", t:"Todavía no tengo negocio"}
+    ]},
+  { id:"punto", type:"score", q:"¿En qué punto estás hoy?",
+    hint:"Toca una opción. Sin respuestas malas.",
+    react:"Clarísimo. <span>Sin vueltas.</span>",
+    options:[
+      {v:0, t:"Solo la idea"}, {v:1, t:"Empezando, primeras ventas"}, {v:2, t:"Ya vendo y quiero crecer"}
+    ]},
+  { id:"clientes", type:"noul", q:"¿Ya tienes clientes que te pagan?",
+    hint:"Un sí o un no, nada más.",
+    react:"Anotado. <span>Eso ajusta tu plan.</span>",
+    options:[ {v:true, t:"Sí"}, {v:false, t:"Todavía no"} ]},
+  { id:"entregable", type:"choice", q:"¿Qué quieres recibir primero?",
+    hint:"Una sola entrega para arrancar con un resultado real.",
+    react:"¡Eso sale primero! <span>Me encanta.</span>",
+    options:[
+      {v:"landing", t:"Una página para vender"}, {v:"presentacion", t:"Una presentación"},
+      {v:"contenido7", t:"Contenido para 7 días"}, {v:"respuestas", t:"Respuestas automáticas a clientes"},
+      {v:"orden", t:"Orden en mis documentos"}
+    ]},
+  { id:"urgencia", type:"score", q:"¿Qué tan rápido lo necesitas?",
+    hint:"",
+    react:"Listo. <span>Ritmo definido.</span>",
+    options:[ {v:0, t:"Sin apuro"}, {v:1, t:"Este mes"}, {v:2, t:"Esta semana"} ]},
+  { id:"meta", type:"text", q:"En una frase: ¿qué quieres lograr en 90 días?",
+    hint:"Escríbelo como se lo dirías a un socio.",
+    react:"Meta guardada. <span>Ahora a construirla.</span>",
+    placeholder:"Ejemplo: quiero conseguir mis primeros 10 clientes desde Instagram",
+    optional:true }
+];
+const ROUTES = { ventas:"Launch · captación de clientes", clientes:"Launch · captación de clientes",
+  contenido:"Launch · contenido que vende", redes:"Launch · contenido que vende",
+  automatizar:"Operate · automatización", procesos:"Operate · automatización",
+  web:"Build · presencia y oferta", pagina:"Build · presencia y oferta", página:"Build · presencia y oferta",
+  vender:"Scale · ventas", ingresos:"Scale · ventas", equipo:"Scale · operación con equipo" };
+let answers = {}, stepIdx = 0, profile = null;
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ---------- Gamificación: niveles y piezas del cerebro ---------- */
+const LEVELS = [
+  "Tu cerebro está despertando",
+  "Tu cerebro ya sabe a qué te dedicas",
+  "Tu cerebro conoce tu punto de partida",
+  "Tu cerebro sabe tu realidad con clientes",
+  "Tu cerebro ya tiene su primera misión",
+  "Tu cerebro conoce tu ritmo",
+  "Tu cerebro conoce tu meta a 90 días"
+];
+const PIECE_LINES = ["Pieza sumada", "Tu cerebro suma esto", "Otra pieza en su lugar", "Esto ya es parte de tu cerebro"];
+
+function renderSegs(){
+  const box = $("#segs"); box.innerHTML = "";
+  STEPS.forEach((s, i) => {
+    const seg = document.createElement("i");
+    if(i < stepIdx){ seg.className = "done"; if(i === stepIdx - 1) seg.classList.add("pop"); }
+    else if(i === stepIdx) seg.className = "now";
+    box.appendChild(seg);
+  });
+  $("#step-count").textContent = "Pregunta " + (stepIdx + 1) + " de " + STEPS.length;
+}
+function renderStep(){
+  const st = STEPS[stepIdx];
+  renderSegs();
+  $("#lvl-line").textContent = "Nivel " + (stepIdx + 1) + " · " + LEVELS[stepIdx];
+  $("#step-type").textContent = "Decisión · " + (st.type === "noul" ? "sí / no" : st.type);
+  $("#step-q").textContent = st.q;
+  $("#step-hint").textContent = st.hint || "";
+  const box = $("#step-opts"); box.innerHTML = "";
+  $("#step-text").classList.toggle("hidden", st.type !== "text");
+  $("#step-skip").classList.toggle("hidden", !st.optional);
+  if(st.type !== "text"){
+    st.options.forEach(op => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "opt";
+      b.innerHTML = op.t + (op.s ? "<small></small>" : "");
+      if(op.s) b.querySelector("small").textContent = op.s;
+      b.addEventListener("click", () => { b.classList.add("sel"); answers[st.id] = op; celebrate(st, op.t); });
+      box.appendChild(b);
+    });
+  } else {
+    const ta = $("#step-input");
+    ta.placeholder = st.placeholder || ""; ta.value = "";
+    ta.focus();
+  }
+}
+function celebrate(st, label){
+  const txt = st.react;
+  if(!txt || REDUCED){ nextStep(); return; }
+  $("#react-txt").innerHTML = txt;
+  const piece = PIECE_LINES[stepIdx % PIECE_LINES.length];
+  $("#react-sub").textContent = label ? piece + ": " + label : piece + ". Nivel " + (stepIdx + 1) + " en curso.";
+  $("#react").classList.add("on");
+  setTimeout(() => { $("#react").classList.remove("on"); nextStep(); }, 650);
+}
+function nextStep(){
+  stepIdx++;
+  if(stepIdx >= STEPS.length){ buildProfile(); return; }
+  renderStep();
+}
+$("#step-next").addEventListener("click", () => {
+  const st = STEPS[stepIdx];
+  const val = $("#step-input").value.trim();
+  answers[st.id] = { v: val };
+  celebrate(st, val ? "Tu meta: " + (val.length > 60 ? val.slice(0, 60) + "..." : val) : "Lo definimos en el camino");
+});
+$("#step-skip").addEventListener("click", () => { answers[STEPS[stepIdx].id] = { v:"" }; nextStep(); });
+
+function classifyText(txt){
+  const low = (txt || "").toLowerCase();
+  let best = null, hits = 0;
+  for(const k in ROUTES){ if(low.includes(k)){ best = ROUTES[k]; hits++; } }
+  return { ruta: best, confianza: hits ? Math.min(0.55 + hits * 0.15, 0.95) : 0.4 };
+}
+function buildProfile(){
+  const inten = answers.intencion || {};
+  const cls = classifyText(answers.meta && answers.meta.v);
+  profile = {
+    etapa: inten.etapa || "Build",
+    agente_sugerido: inten.agente || "ai-builder",
+    intencion: inten.t || "",
+    oficio: (answers.oficio || {}).t || "",
+    punto: (answers.punto || {}).t || "",
+    clientes: (answers.clientes || {}).v === true ? "sí" : "todavía no",
+    entregable: (answers.entregable || {}).t || "",
+    urgencia: (answers.urgencia || {}).t || "",
+    meta90: (answers.meta && answers.meta.v) || "",
+    ruta_texto: cls.ruta,
+    confianza_texto: cls.confianza
+  };
+  try{ localStorage.setItem("a2d_profile", JSON.stringify(profile)); }catch(e){}
+  const rows = [
+    ["Etapa", profile.etapa], ["Agente de Ai2Me que se activa", profile.agente_sugerido],
+    ["Quieres lograr", profile.intencion], ["Oficio", profile.oficio],
+    ["Punto de partida", profile.punto], ["¿Ya tienes clientes?", profile.clientes],
+    ["Primera entrega", profile.entregable], ["Urgencia", profile.urgencia],
+    ["Meta a 90 días", profile.meta90 || "Sin definir"],
+    ["Ruta sugerida por tu meta", profile.ruta_texto || "Según tu primera entrega"],
+    ["Confianza de la ruta", Math.round(profile.confianza_texto * 100) + "%"]
+  ];
+  const dl = $("#decision-dl"); dl.innerHTML = "";
+  rows.forEach(([k,v]) => {
+    const dt = document.createElement("dt"); dt.textContent = k;
+    const dd = document.createElement("dd"); dd.textContent = v;
+    dl.appendChild(dt); dl.appendChild(dd);
+  });
+  $("#ach-level").textContent = "Nivel " + STEPS.length + " · " + LEVELS[STEPS.length - 1];
+  $("#stat-nivel").textContent = STEPS.length;
+  $("#stat-etapa").textContent = profile.etapa;
+  $("#stat-entrega").textContent = profile.entregable || "Por definir";
+  const pill = $("#chat-level");
+  pill.textContent = "Nivel " + STEPS.length + " · " + LEVELS[STEPS.length - 1];
+  pill.classList.remove("hidden");
+  show("#v-profile");
+}
+/* ---------- Navegación ---------- */
+$("#btn-start").addEventListener("click", () => { stepIdx = 0; answers = {}; show("#v-onb"); renderStep(); });
+$("#btn-redo").addEventListener("click", () => { stepIdx = 0; answers = {}; show("#v-onb"); renderStep(); });
+$("#btn-have").addEventListener("click", () => { window.location.href = AI2ME_APP; });
+$("#btn-ai2me").addEventListener("click", () => { window.location.href = AI2ME_PRICING; });
+$("#btn-back-profile").addEventListener("click", () => show("#v-profile"));
+$("#btn-config").addEventListener("click", () => {
+  $("#cfg-key").value = store.k; $("#cfg-model").value = store.model; $("#cfg-bot").value = store.bot;
+  show("#v-config");
+});
+$("#btn-save").addEventListener("click", () => {
+  store.k = $("#cfg-key").value.trim();
+  store.model = $("#cfg-model").value.trim() || "moonshotai/kimi-k3";
+  store.bot = $("#cfg-bot").value.trim().replace(/^@/, "");
+  updateChatStatus(); show(profile ? "#v-chat" : "#v-start");
+});
+$("#btn-config-back").addEventListener("click", () => show("#v-start"));
+/* ---------- Chat ---------- */
+const history = [];
+const EXAMPLES = ["Arma mi primera entrega con mi perfil", "¿Qué hacemos esta semana para conseguir clientes?", "Escríbeme un guion de video corto para vender mi servicio"];
+function addMsg(role, text){
+  const box = $("#chat-box");
+  const d = document.createElement("div");
+  d.className = "msg " + (role === "user" ? "me" : role === "sys" ? "sys" : "bot");
+  d.textContent = text; box.appendChild(d);
+  window.scrollTo({top: document.body.scrollHeight});
+  return d;
+}
+function updateChatStatus(){
+  $("#chat-status").textContent = store.k
+    ? "En vivo: Kimi K3 (" + store.model + ") vía OpenRouter, con tu perfil de onboarding como contexto."
+    : "Modo demostración: sin llave veo tu perfil y te propongo el plan, pero no llamo al modelo. Pega tu llave de OpenRouter en Ajustes para hablar en vivo.";
+}
+function systemPrompt(){
+  const p = profile || JSON.parse(localStorage.getItem("a2d_profile") || "null") || {};
+  return "Eres el segundo cerebro de un alumno de Operador 90: la dupla Diego Vetencourt + Vesper operando sobre Ai2Me. " +
+    "Hablas español simple, directo, sin jerga técnica. Una idea por mensaje, pasos cortos y accionables. " +
+    "Nunca le pidas al usuario que aprenda herramientas complicadas: tú decides y propones el siguiente paso. " +
+    "Perfil del usuario (onboarding): " + JSON.stringify(p);
+}
+async function sendChat(text){
+  history.push({role:"user", content:text});
+  addMsg("user", text);
+  if(!store.k){
+    const reply = "Con tu perfil, mi primer paso sería: " + (profile ? profile.entregable : "definir tu primera entrega") +
+      ". Para ejecutarlo hablando conmigo de verdad, pega tu llave de OpenRouter en Ajustes y lo hacemos en vivo con Kimi K3.";
+    addMsg("bot", reply); history.push({role:"assistant", content:reply}); return;
+  }
+  const pending = addMsg("bot", "Pensando...");
+  try{
+    const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method:"POST",
+      headers:{ "Authorization":"Bearer " + store.k, "Content-Type":"application/json",
+        "HTTP-Referer": location.href, "X-Title":"AI2Diego" },
+      body: JSON.stringify({ model: store.model,
+        messages:[{role:"system", content: systemPrompt()}].concat(history.slice(-12)) })
+    });
+    const data = await r.json();
+    if(!r.ok) throw new Error((data && data.error && data.error.message) || ("HTTP " + r.status));
+    const reply = data.choices[0].message.content || "Sin respuesta del modelo.";
+    pending.textContent = reply;
+    history.push({role:"assistant", content: reply});
+  }catch(e){
+    pending.textContent = "No pude hablar con el modelo (" + e.message + "). Revisa tu llave en Ajustes o tu conexión.";
+  }
+}
+$("#btn-chat").addEventListener("click", () => {
+  if(profile){
+    const pill = $("#chat-level");
+    pill.textContent = "Nivel " + STEPS.length + " · " + LEVELS[STEPS.length - 1];
+    pill.classList.remove("hidden");
+  }
+  show("#v-chat"); updateChatStatus();
+  if(!history.length){
+    addMsg("bot", "Ya tengo tu perfil. No necesitas aprender Ai2Me: dime qué quieres y yo te llevo paso a paso.");
+    const chips = $("#chips"); chips.innerHTML = "";
+    EXAMPLES.forEach(x => {
+      const c = document.createElement("button");
+      c.type = "button"; c.className = "chip"; c.textContent = x;
+      c.addEventListener("click", () => sendChat(x)); chips.appendChild(c);
+    });
+  }
+});
+$("#btn-send").addEventListener("click", () => {
+  const ta = $("#composer"); const t = ta.value.trim();
+  if(!t) return; ta.value = ""; sendChat(t);
+});
+$("#composer").addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); $("#btn-send").click(); }
+});
+/* ---------- Traspaso a Telegram (soft ask) ---------- */
+$("#btn-telegram").addEventListener("click", async () => {
+  const p = profile || {};
+  const last = history.slice(-6).map(m => (m.role === "user" ? "Yo: " : "Segundo cerebro: ") + m.content).join("\n");
+  const ctx = "AI2DIEGO-CONTEXTO\nPerfil: " + JSON.stringify(p) + "\nÚltimos mensajes:\n" + last +
+    "\nInstrucción: continúa esta conversación como mi segundo cerebro, en español simple, un paso a la vez.";
+  let copied = false;
+  try{ await navigator.clipboard.writeText(ctx); copied = true; }catch(e){}
+  const bot = store.bot;
+  if(bot){
+    addMsg("sys", (copied ? "Contexto copiado. " : "Copia el contexto desde tu perfil. ") + "Al abrir el bot, pega el contexto como primer mensaje y seguimos ahí.");
+    window.open("https://t.me/" + bot, "_blank");
+  } else {
+    addMsg("sys", "Contexto " + (copied ? "copiado al portapapeles" : "listo") + ". Configura el usuario del bot en Ajustes para abrirlo directo, o pega el contexto en tu bot de Telegram.");
+    show("#v-config");
+    $("#cfg-key").value = store.k; $("#cfg-model").value = store.model; $("#cfg-bot").value = store.bot;
+  }
+});
+updateChatStatus();
+</script>
+</body>
+</html>

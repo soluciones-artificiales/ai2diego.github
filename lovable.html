@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Ai2Me en modo prompt · Exploración de diseño</title>
+<meta name="description" content="Exploración de diseño: Ai2Me presentado con el patrón de una sola caja de prompt. Las cuentas, planes y pagos viven en ai2me.com.">
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#faf9f7; --card:#ffffff;
+  --ink:#1c1917; --muted:#6b6660; --line:#ece8e3;
+  --accent:#e0524d; --accent-dark:#c23e3a; --accent-soft:#fdeceb;
+  --violet:#6d5df6;
+  --radius:22px;
+  --shadow:0 12px 40px rgba(28,25,23,.10), 0 2px 8px rgba(28,25,23,.06);
+  --font:ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);min-height:100dvh;display:flex;flex-direction:column}
+button{font-family:var(--font);cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+
+header{display:flex;align-items:center;gap:10px;padding:16px 20px;max-width:1080px;width:100%;margin:0 auto}
+.wordmark{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--violet));display:grid;place-items:center;flex:0 0 auto}
+.mark svg{width:18px;height:18px}
+header .sp{flex:1}
+.navlink{text-decoration:none;font-size:14.5px;font-weight:600;color:var(--ink);padding:9px 14px;border-radius:99px}
+.navlink:hover{background:var(--bg-soft)}
+.navlink.cta{background:var(--ink);color:#fff}
+.navlink.cta:hover{background:#000}
+
+.hero{position:relative;text-align:center;padding:38px 20px 10px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -20% auto;height:520px;z-index:-1;
+  background:
+    radial-gradient(420px 260px at 18% 30%, rgba(255,183,120,.45), transparent 70%),
+    radial-gradient(460px 280px at 82% 20%, rgba(255,140,160,.38), transparent 70%),
+    radial-gradient(520px 300px at 55% 85%, rgba(150,130,255,.30), transparent 70%);
+  filter:blur(6px)}
+.hero h1{font-size:clamp(34px,7.2vw,56px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin:8px auto 12px;max-width:640px}
+.hero p{color:var(--muted);font-size:clamp(16px,2.6vw,19px);line-height:1.5;margin:0 auto 26px;max-width:520px}
+
+.promptbox{max-width:640px;margin:0 auto;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 14px 12px;text-align:left;transition:border-color .18s ease, box-shadow .18s ease}
+.promptbox:focus-within{border-color:#d9d2ff;box-shadow:0 16px 48px rgba(109,93,246,.16), 0 2px 8px rgba(28,25,23,.06)}
+.promptbox textarea{width:100%;border:none;resize:none;font-family:var(--font);font-size:17px;line-height:1.45;color:var(--ink);background:transparent;min-height:52px;padding:4px 6px}
+.promptbox textarea::placeholder{color:#a39d95}
+.promptbox textarea:focus{outline:none}
+.prow{display:flex;align-items:center;gap:8px;padding:2px 2px 0}
+.prow .hint{font-size:12.5px;color:var(--muted)}
+.prow .sp{flex:1}
+.sendbtn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;border-radius:99px;padding:11px 18px;font-size:15px;font-weight:600;transition:transform .15s ease, background .15s ease}
+.sendbtn:hover{background:#000}
+.sendbtn:active{transform:scale(.97)}
+.sendbtn svg{width:16px;height:16px}
+
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:20px auto 4px;max-width:640px;padding:0 4px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:9px 15px;font-size:14px;font-weight:550;color:var(--ink);transition:border-color .15s ease, background .15s ease}
+.chip:hover{border-color:#d9d2ff;background:#fbfaff}
+.chip svg{width:15px;height:15px;flex:0 0 auto}
+
+main{width:100%;max-width:1080px;margin:0 auto;padding:10px 20px 8px;flex:1}
+.preview{display:none;max-width:640px;margin:26px auto 6px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.preview.on{display:block}
+.preview .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent-dark);background:var(--accent-soft);border-radius:99px;padding:5px 10px}
+.preview h2{font-size:21px;letter-spacing:-.01em;margin:12px 0 6px}
+.preview p{color:var(--muted);line-height:1.55;margin:0 0 10px;font-size:15px}
+.preview .agentline{font-size:13.5px;color:var(--ink);background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 16px}
+.preview .agentline code{font-family:ui-monospace, Menlo, Consolas, monospace;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.preview blockquote{margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--bg-soft);border-radius:0 12px 12px 0;font-size:15px;color:var(--ink)}
+.exits{display:grid;gap:10px}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:14px;padding:14px 16px;font-size:15.5px;font-weight:650;transition:transform .15s ease, background .15s ease, border-color .15s ease}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-dark)}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:#d9d2ff}
+.again{display:block;margin:14px auto 0;background:none;border:none;color:var(--muted);font-size:13.5px;text-decoration:underline;text-underline-offset:3px}
+
+.tools{padding:38px 0 8px}
+.tools h2{text-align:center;font-size:clamp(23px,4.5vw,30px);letter-spacing:-.02em;margin:0 0 6px}
+.tools .sub{text-align:center;color:var(--muted);margin:0 auto 22px;max-width:480px;line-height:1.5;font-size:15.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.tool{display:block;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px;color:var(--ink);transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;width:100%}
+.tool:hover{border-color:#d9d2ff;box-shadow:0 8px 26px rgba(28,25,23,.07);transform:translateY(-1px)}
+.tool .ic{width:38px;height:38px;border-radius:11px;background:var(--bg-soft);border:1px solid var(--line);display:grid;place-items:center;margin-bottom:10px}
+.tool .ic svg{width:19px;height:19px}
+.tool b{display:block;font-size:15.5px;margin-bottom:3px}
+.tool span{display:block;color:var(--muted);font-size:13.5px;line-height:1.45}
+.note{text-align:center;color:var(--muted);font-size:13px;margin:16px auto 0;max-width:520px;line-height:1.5}
+
+footer{border-top:1px solid var(--line);margin-top:34px;padding:20px;font-size:12.5px;color:var(--muted);line-height:1.6;text-align:center}
+footer a{color:var(--ink);font-weight:600}
+@media (max-width:480px){
+  .grid{grid-template-columns:1fr 1fr}
+  .navlink{padding:8px 11px;font-size:13.5px}
+  .hero{padding-top:26px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4l6.5 3.6v4.9c0 3.9-2.7 6.5-6.5 7.9C8.2 19 5.5 16.4 5.5 12.5V7.6L12 4z" fill="#fff"/></svg></span>
+    Ai2Me
+  </div>
+  <div class="sp"></div>
+  <a class="navlink" href="https://www.ai2me.com/pricing" rel="noopener">Planes</a>
+  <a class="navlink cta" href="https://www.ai2me.com/landing" rel="noopener">Entrar</a>
+</header>
+
+<section class="hero">
+  <h1>¿Qué quieres construir hoy?</h1>
+  <p>Descríbelo con tus palabras. Ai2Me elige la herramienta correcta y te lleva directo a crear, sin aprenderte un panel entero.</p>
+
+  <form class="promptbox" id="prompt-form">
+    <label class="sr" for="prompt" style="position:absolute;left:-9999px">Describe lo que quieres crear</label>
+    <textarea id="prompt" rows="2" placeholder="Ejemplo: quiero una página para vender mis servicios de diseño"></textarea>
+    <div class="prow">
+      <span class="hint">Enter para enviar</span>
+      <span class="sp"></span>
+      <button class="sendbtn" type="submit" aria-label="Enviar y ver la vista previa">
+        Crear
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </form>
+
+  <div class="chips" role="group" aria-label="Ideas para empezar">
+    <button class="chip" type="button" data-agent="ai-builder" data-text="Crear mi web">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#6d5df6" stroke-width="2"/><path d="M3 9.5h18" stroke="#6d5df6" stroke-width="2"/></svg>
+      Crear mi web
+    </button>
+    <button class="chip" type="button" data-agent="ai-client-acquisition" data-text="Conseguir clientes">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" stroke="#e0524d" stroke-width="2"/><path d="M15.3 15.3L21 21" stroke="#e0524d" stroke-width="2" stroke-linecap="round"/><path d="M10.5 7.8v5.4M7.8 10.5h5.4" stroke="#e0524d" stroke-width="2" stroke-linecap="round"/></svg>
+      Conseguir clientes
+    </button>
+    <button class="chip" type="button" data-agent="ai-slides" data-text="Hacer una presentación">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2" stroke="#e0524d" stroke-width="2"/><path d="M12 17v3m-4 0h8" stroke="#e0524d" stroke-width="2" stroke-linecap="round"/></svg>
+      Hacer una presentación
+    </button>
+    <button class="chip" type="button" data-agent="ai-image" data-text="Crear contenido">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" stroke="#6d5df6" stroke-width="2"/><circle cx="9" cy="10" r="1.8" stroke="#6d5df6" stroke-width="2"/><path d="M4 17.5l4.5-4 3.5 3 3-2.7 5 4.2" stroke="#6d5df6" stroke-width="2" stroke-linejoin="round"/></svg>
+      Crear contenido
+    </button>
+  </div>
+</section>
+
+<main>
+  <section class="preview" id="preview" aria-live="polite" aria-label="Vista previa de tu creación">
+    <span class="tag">Vista previa · Demostración</span>
+    <h2 id="pv-title"></h2>
+    <blockquote id="pv-quote"></blockquote>
+    <p id="pv-summary"></p>
+    <p class="agentline">Agente de Ai2Me que lo atiende: <code id="pv-agent"></code></p>
+    <div class="exits">
+      <a class="btn primary" href="https://www.ai2me.com/landing" rel="noopener">Abrir en Ai2Me</a>
+      <a class="btn ghost" href="https://www.ai2me.com/pricing" rel="noopener">Ver planes</a>
+    </div>
+    <button class="again" id="pv-again" type="button">Probar con otra idea</button>
+  </section>
+
+  <section class="tools" aria-label="Herramientas de Ai2Me">
+    <h2>Todo Ai2Me, desde una sola frase</h2>
+    <p class="sub">Estas son las herramientas reales de Ai2Me. Toca cualquiera y la caja de arriba arma la ruta por ti.</p>
+    <div class="grid" id="tools-grid"></div>
+    <p class="note">Esta vista previa no crea nada todavía. Tu proyecto real se crea dentro de Ai2Me, con tu cuenta.</p>
+  </section>
+</main>
+
+<footer>
+  Exploración de diseño construida por <b>Diego Vetencourt · Soluciones Artificiales</b>: así se vería Ai2Me con el patrón de una sola caja de prompt.
+  Las cuentas, los planes, los créditos y los pagos pertenecen a Ai2Me y viven en <a href="https://www.ai2me.com/landing" rel="noopener">ai2me.com</a>.
+  Herramientas y agentes según el inventario público de la plataforma.
+</footer>
+
+<script>
+"use strict";
+const AI2ME_APP = "https://www.ai2me.com/landing";
+const AI2ME_PRICING = "https://www.ai2me.com/pricing";
+
+/* Agentes reales de Ai2Me (inventario REA de los bundles públicos) */
+const AGENTS = {
+  "ai-builder": {
+    nombre: "Builder",
+    titulo: "Tu página o app, lista para vender",
+    resumen: "Ai2Me arma la estructura, los textos y el diseño de tu página a partir de tu descripción. Tú revisas el resultado y lo ajustas hablando, sin tocar código."
+  },
+  "ai-client-acquisition": {
+    nombre: "Client Acquisition",
+    titulo: "Un plan para conseguir clientes",
+    resumen: "Ai2Me prepara tu ruta de captación: a quién le hablas, qué le ofreces y qué mensajes de seguimiento usas para convertir interés en clientes."
+  },
+  "ai-slides": {
+    nombre: "Slides",
+    titulo: "Tu presentación, armada por ti sin empezar de cero",
+    resumen: "Ai2Me convierte tu idea en una presentación con orden, títulos claros y el contenido de cada lámina listo para presentar."
+  },
+  "ai-docs": {
+    nombre: "Docs",
+    titulo: "Tu documento, redactado y en orden",
+    resumen: "Ai2Me redacta y organiza tu documento: propuesta, guía o proceso, con estructura clara y listo para compartir."
+  },
+  "ai-sheets": {
+    nombre: "Sheets",
+    titulo: "Tu hoja de cálculo, sin pelear con fórmulas",
+    resumen: "Ai2Me crea la tabla que necesitas, con columnas, fórmulas y el orden correcto para llevar tus números sin enredos."
+  },
+  "ai-image": {
+    nombre: "Image",
+    titulo: "Contenido visual para tu negocio",
+    resumen: "Ai2Me genera las imágenes de tu contenido: piezas para redes, anuncios o tu página, en el estilo que le pidas."
+  },
+  "ai-video": {
+    nombre: "Video",
+    titulo: "Tu video corto, sin grabarte horas",
+    resumen: "Ai2Me arma tu video a partir de tu idea: guion, escenas y el formato listo para redes."
+  },
+  "ai-chat": {
+    nombre: "AI Chat",
+    titulo: "Conversemos y lo construimos juntos",
+    resumen: "Ai2Me abre un chat contigo para desarrollar tu idea paso a paso y llevarla a la herramienta correcta cuando esté clara."
+  },
+  "chat": {
+    nombre: "AI Chat",
+    titulo: "Conversemos y lo construimos juntos",
+    resumen: "Ai2Me abre un chat contigo para desarrollar tu idea paso a paso y llevarla a la herramienta correcta cuando esté clara."
+  }
+};
+
+/* Herramientas reales de Ai2Me, según el inventario. agente = agent_id que la atiende */
+const TOOLS = [
+  { n:"Builder", d:"Páginas y apps sin código", agente:"ai-builder", icon:"web" },
+  { n:"Slides", d:"Presentaciones en minutos", agente:"ai-slides", icon:"slides" },
+  { n:"Sheets", d:"Hojas de cálculo con IA", agente:"ai-sheets", icon:"sheets" },
+  { n:"Docs", d:"Documentos redactados y en orden", agente:"ai-docs", icon:"docs" },
+  { n:"Agent Launchpad", d:"Lanza tus propios agentes", agente:"chat", icon:"launch" },
+  { n:"AI Chat", d:"Tu copiloto conversacional", agente:"ai-chat", icon:"chat" },
+  { n:"Image", d:"Imágenes para tu contenido", agente:"ai-image", icon:"image" },
+  { n:"Video", d:"Videos cortos para redes", agente:"ai-video", icon:"video" },
+  { n:"Business Management", d:"El contexto de tu empresa en un lugar", agente:"chat", icon:"biz" },
+  { n:"Client Acquisition", d:"Clientes nuevos, en piloto guiado", agente:"ai-client-acquisition", icon:"clients" }
+];
+
+const ICONS = {
+  web:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18"/>',
+  slides:'<rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M12 17v3m-4 0h8"/>',
+  sheets:'<rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M4 9.5h16M4 15h16M10 3.5v17M15.5 3.5v17"/>',
+  docs:'<path d="M6 3.5h8L19 8.5v12H6z" stroke-linejoin="round"/><path d="M13.5 3.5v5.5H19M9 13h6M9 16.5h6"/>',
+  launch:'<path d="M12 3c2.8 2.3 4.2 5.6 4.2 9.2l-4.2 4.4-4.2-4.4C7.8 8.6 9.2 5.3 12 3z" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="1.7"/><path d="M7.8 13.5L5 18l2.7-.6M16.2 13.5L19 18l-2.7-.6"/>',
+  chat:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H12l-4.6 4v-4H6.5A2.5 2.5 0 0 1 4 13.5z" stroke-linejoin="round"/>',
+  image:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4 17.5l4.5-4 3.5 3 3-2.7 5 4.2" stroke-linejoin="round"/>',
+  video:'<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.2l5-2.9v9.4l-5-2.9"/>',
+  biz:'<rect x="4" y="7.5" width="16" height="12.5" rx="2"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5M4 12.5h16"/>',
+  clients:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15.3 15.3L21 21M10.5 7.8v5.4M7.8 10.5h5.4" stroke-linecap="round"/>'
+};
+function iconSvg(kind, color){
+  return '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><g stroke="' + color + '" stroke-width="1.9" stroke-linecap="round">' + ICONS[kind] + "</g></svg>";
+}
+
+/* Cuadrícula de herramientas */
+const grid = document.getElementById("tools-grid");
+TOOLS.forEach(t => {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "tool";
+  b.setAttribute("aria-label", "Crear con " + t.n);
+  const ic = document.createElement("span"); ic.className = "ic"; ic.innerHTML = iconSvg(t.icon, "#6d5df6");
+  const nm = document.createElement("b"); nm.textContent = t.n;
+  const ds = document.createElement("span"); ds.textContent = t.d;
+  b.appendChild(ic); b.appendChild(nm); b.appendChild(ds);
+  b.addEventListener("click", () => routeIntent(t.n, t.agente));
+  grid.appendChild(b);
+});
+
+/* Enrutado de intención: frase libre o toque, al agente correcto de Ai2Me */
+const KEYWORDS = [
+  ["ai-client-acquisition", ["cliente", "captaci", "prospect", "vender m", "ventas"]],
+  ["ai-slides", ["presentaci", "diapositiva", "pitch", "slides"]],
+  ["ai-docs", ["documento", "propuesta", "contrato", "guía", "guia", "redact"]],
+  ["ai-sheets", ["hoja de cálculo", "hoja de calculo", "excel", "tabla", "números", "numeros", "presupuesto", "inventario"]],
+  ["ai-image", ["imagen", "foto", "logo", "diseño de", "contenido", "post", "anuncio"]],
+  ["ai-video", ["video", "reel", "tiktok"]],
+  ["ai-builder", ["web", "página", "pagina", "sitio", "app", "aplicación", "aplicacion", "tienda", "landing"]]
+];
+function detectAgent(text){
+  const low = " " + (text || "").toLowerCase() + " ";
+  for(const [agent, words] of KEYWORDS){
+    for(const w of words){ if(low.includes(w)) return agent; }
+  }
+  return "ai-chat";
+}
+
+const preview = document.getElementById("preview");
+function routeIntent(text, forcedAgent){
+  const clean = (text || "").trim();
+  const agent = forcedAgent || detectAgent(clean);
+  const a = AGENTS[agent] || AGENTS["ai-chat"];
+  document.getElementById("pv-title").textContent = a.titulo;
+  const q = document.getElementById("pv-quote");
+  if(clean){ q.textContent = "\u201C" + clean + "\u201D"; q.style.display = ""; }
+  else { q.style.display = "none"; }
+  document.getElementById("pv-summary").textContent = a.resumen + " Esto es solo la ruta: tu creación real ocurre dentro de Ai2Me.";
+  document.getElementById("pv-agent").textContent = agent;
+  preview.classList.add("on");
+  preview.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+document.getElementById("prompt-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const ta = document.getElementById("prompt");
+  if(!ta.value.trim()){
+    ta.focus();
+    routeIntent("Quiero empezar a crear con Ai2Me", "ai-chat");
+    return;
+  }
+  routeIntent(ta.value);
+});
+document.getElementById("prompt").addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    document.getElementById("prompt-form").requestSubmit();
+  }
+});
+document.querySelectorAll(".chip").forEach(ch => {
+  ch.addEventListener("click", () => {
+    document.getElementById("prompt").value = ch.dataset.text;
+    routeIntent(ch.dataset.text, ch.dataset.agent);
+  });
+});
+document.getElementById("pv-again").addEventListener("click", () => {
+  preview.classList.remove("on");
+  const ta = document.getElementById("prompt");
+  ta.value = ""; ta.focus();
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+</script>
+</body>
+</html>
